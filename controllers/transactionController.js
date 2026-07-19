@@ -37,12 +37,60 @@ export const createTransaction = async (req, res) => {
 
 export const getTransactions = async (req, res) => {
   try {
-    const transactions = await Transaction.find({ user: req.user._id }).sort({
-      date: -1,
-    });
+    // Read query parameters
+    const { type, category, page, limit } = req.query;
 
+    // Validate transaction type
+    if (type && !["income", "expense"].includes(type)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid transaction type.",
+      });
+    }
+
+    // Create filter
+    const filter = {
+      user: req.user._id,
+    };
+
+    if (type) {
+      filter.type = type;
+    }
+
+    if (category) {
+      filter.category = category;
+    }
+
+    // Pagination
+    const pageNumber = Math.max(1, parseInt(page) || 1);
+
+    const limitNumber = Math.min(
+      100,
+      Math.max(1, parseInt(limit) || 10)
+    );
+
+    const skip = (pageNumber - 1) * limitNumber;
+
+    // Count total documents
+    const totalTransactions = await Transaction.countDocuments(filter);
+
+    const totalPages = Math.max(
+      1,
+      Math.ceil(totalTransactions / limitNumber)
+    );
+
+    // Fetch filtered and paginated transactions
+    const transactions = await Transaction.find(filter)
+      .sort({ date: -1 })
+      .skip(skip)
+      .limit(limitNumber);
+
+    // Return response
     return res.status(200).json({
       success: true,
+      page: pageNumber,
+      totalPages,
+      totalTransactions,
       transactions,
     });
   } catch (error) {
