@@ -34,3 +34,53 @@ export const createTransaction = async (req, res) => {
     });
   }
 };
+
+export const getTransactions = async (req, res) => {
+  try {
+    const transactions = await Transaction.find({ user: req.user._id }).sort({
+      date: -1,
+    });
+
+    return res.status(200).json({
+      success: true,
+      transactions,
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const deleteTransaction = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const transaction = await Transaction.findOne({
+      _id: id,
+      user: req.user._id,
+    });
+
+    if (!transaction) {
+      return res.status(404).json({
+        success: false,
+        message: "Transaction not found",
+      });
+    }
+
+    await transaction.deleteOne();
+
+    return res.status(200).json({
+      success: true,
+      message: "Transaction deleted successfully",
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
