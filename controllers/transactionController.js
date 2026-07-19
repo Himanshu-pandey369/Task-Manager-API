@@ -45,7 +45,6 @@ export const getTransactions = async (req, res) => {
       success: true,
       transactions,
     });
-
   } catch (error) {
     return res.status(500).json({
       success: false,
@@ -76,9 +75,49 @@ export const deleteTransaction = async (req, res) => {
       success: true,
       message: "Transaction deleted successfully",
     });
-
   } catch (error) {
     return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const updateTransaction = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const { title, amount, type, category, note, date, receipt } = req.body;
+
+    const transaction = await Transaction.findOne({
+      _id: id,
+      user: req.user._id,
+    });
+
+    if (!transaction) {
+      return res.status(404).json({
+        success: false,
+        message: "Transaction not found",
+      });
+    }
+
+    transaction.title = title ?? transaction.title;
+    transaction.amount = amount ?? transaction.amount;
+    transaction.type = type ?? transaction.type;
+    transaction.category = category ?? transaction.category;
+    transaction.note = note ?? transaction.note;
+    transaction.date = date ?? transaction.date;
+    transaction.receipt = receipt ?? transaction.receipt;
+
+    await transaction.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Transaction updated successfully",
+      transaction,
+    });
+  } catch (error) {
+    res.status(500).json({
       success: false,
       message: error.message,
     });
