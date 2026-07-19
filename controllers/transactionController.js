@@ -71,7 +71,6 @@ export const getTransactions = async (req, res) => {
 
     const skip = (pageNumber - 1) * limitNumber;
 
-    // Count total documents
     const totalTransactions = await Transaction.countDocuments(filter);
 
     const totalPages = Math.max(
@@ -79,13 +78,11 @@ export const getTransactions = async (req, res) => {
       Math.ceil(totalTransactions / limitNumber)
     );
 
-    // Fetch filtered and paginated transactions
     const transactions = await Transaction.find(filter)
       .sort({ date: -1 })
       .skip(skip)
       .limit(limitNumber);
 
-    // Return response
     return res.status(200).json({
       success: true,
       page: pageNumber,
