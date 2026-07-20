@@ -1,5 +1,5 @@
 import Budget from "../models/Budget.js";
-
+import Transaction from "../models/Transaction.js";
 export const createBudget = async (req, res) => {
   try {
     const { category, amount, month, year } = req.body;
@@ -63,6 +63,7 @@ export const getBudgets = async (req, res) => {
         );
 
         return {
+          _id: budget._id,
           category: budget.category,
           budget: budget.amount,
           spent,

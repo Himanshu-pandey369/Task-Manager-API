@@ -2,7 +2,8 @@ import express from "express";
 import { 
   createTransaction, 
   getTransactions,
-  deleteTransaction
+  deleteTransaction,
+  updateTransaction
 } from "../controllers/transactionController.js";
 import authMiddleware from "../middleware/authMiddlerware.js";
 
@@ -13,4 +14,6 @@ router.post("/", authMiddleware, createTransaction);
 router.get("/", authMiddleware, getTransactions);
 
 router.delete("/:id", authMiddleware, deleteTransaction);
+
+router.put("/:id", authMiddleware, updateTransaction);
 export default router;
