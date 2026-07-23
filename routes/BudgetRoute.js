@@ -5,7 +5,7 @@ import {
   getBudgets,
   updateBudget,
   deleteBudget,
-} from "../controllers/budgetController.js";
+} from "../controllers/BudgetController.js";
 
 const router = express.Router();
 
