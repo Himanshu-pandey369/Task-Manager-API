@@ -4,7 +4,7 @@ import morgan from "morgan";
 import authRoutes from "./routes/authRoutes.js";
 import transactionRoutes from "./routes/transactionRoutes.js";
 import budgetRoutes from "./routes/BudgetRoute.js";
-import dashboardRoutes from "./routes/dashboardRoutes.js";
+import dashboardRoutes from "./routes/dashBoardRoutes.js";
 import userRoutes from "./routes/userRoutes.js"
 const app = express();
 
