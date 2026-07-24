@@ -23,20 +23,19 @@ export const createBudget = async (req, res) => {
       success: true,
       budget,
     });
-  } catch (error) {
-    // Handle duplicate budget (unique index)
-    if (existingBudget) {
-      return res.status(400).json({
-        success: false,
-        message: "Budget already exists for this category and month.",
-      });
-    }
-
-    return res.status(500).json({
+  }catch (error) {
+  if (error.code === 11000) {
+    return res.status(400).json({
       success: false,
-      message: error.message,
+      message: "Budget already exists for this category and month.",
     });
   }
+
+  return res.status(500).json({
+    success: false,
+    message: error.message,
+  });
+}
 };
 
 export const getBudgets = async (req, res) => {
