@@ -79,9 +79,9 @@ export const getTransactions = async (req, res) => {
     );
 
     const transactions = await Transaction.find(filter)
-      .sort({ date: -1 })
-      .skip(skip)
-      .limit(limitNumber);
+       .sort({ date: -1, createdAt: -1 })
+       .skip(skip)
+       .limit(limitNumber);
 
     return res.status(200).json({
       success: true,
